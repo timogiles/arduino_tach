@@ -5,6 +5,7 @@ float freq, period;
 int tach_out_min;
 
 //pin 3 outputs voltage to the tachometer.  
+//pin 7 input measure the ECU tachometer signal
 
 void setup() {
   pinMode(tach_in, INPUT_PULLUP);
@@ -18,7 +19,6 @@ void setup() {
   
 }
 
-//86Hz = 3000RPM
 void loop() {
   ontime = pulseIn(tach_in, HIGH);
   offtime = pulseIn(tach_in, LOW);
@@ -30,6 +30,8 @@ void loop() {
   Serial.print("Freq = ");
   Serial.println(freq);
 
+  //freq/1.17 was found to be the right callibration between input from the ECU and display
+  //on the tachometer.  100Hz = 3000RPM
   analogWrite(tach_out, constrain(freq/1.17,0,255));
   if(freq > 250){
     analogWrite(tach_out, tach_out_min);
